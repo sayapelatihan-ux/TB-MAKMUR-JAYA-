@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TB Makmur Jaya - Toko Bangunan Online</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <nav class="navbar">
+        <div class="brand">TB Makmur Jaya</div>
+        <div class="nav-links">
+          <a href="#produk">Produk</a>
+          <a href="#keranjang">Keranjang</a>
+          <a href="#transaksi">Transaksi</a>
+        </div>
+      </nav>
+
+      <div class="hero-content">
+        <div>
+          <p class="eyebrow">Toko bangunan terpercaya</p>
+          <h1>Belanja material bangunan cepat, aman, dan praktis.</h1>
+          <p class="hero-text">
+            Temukan semen, cat, pipa, keramik, dan kebutuhan konstruksi lainnya dengan sistem keranjang dan transaksi digital yang otomatis.
+          </p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#produk">Lihat Produk</a>
+            <a class="btn secondary" href="#transaksi">Kelola Keuangan</a>
+          </div>
+        </div>
+        <div class="featured-card" id="featuredCard">
+          <p class="eyebrow">Produk unggulan otomatis</p>
+          <h2 id="featuredName">Loading...</h2>
+          <p id="featuredDesc">Memuat produk terbaik...</p>
+          <div class="featured-meta">
+            <span id="featuredPrice">Rp 0</span>
+            <span id="featuredCategory">Kategori</span>
+          </div>
+          <div class="featured-controls">
+            <button class="chip" data-featured-nav="prev">← Sebelumnya</button>
+            <button class="chip" data-featured-nav="next">Berikutnya →</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="panel login-panel">
+        <div>
+          <p class="eyebrow">Akses pengguna</p>
+          <h3>Login User</h3>
+          <p>Masuk untuk menambahkan barang ke keranjang dan melakukan transaksi.</p>
+        </div>
+        <form id="loginForm" class="inline-form">
+          <input id="username" name="username" placeholder="Nama pengguna" required />
+          <input id="password" name="password" type="password" placeholder="Kata sandi" required />
+          <button class="btn primary" type="submit">Masuk</button>
+        </form>
+        <div id="loginStatus" class="status-box">Belum login</div>
+      </section>
+
+      <section class="panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Data barang</p>
+            <h3>Produk Tersedia</h3>
+          </div>
+          <div class="filters">
+            <input id="searchInput" type="text" placeholder="Cari nama barang..." />
+            <select id="sortSelect">
+              <option value="default">Urutkan</option>
+              <option value="price-asc">Harga terendah</option>
+              <option value="price-desc">Harga tertinggi</option>
+            </select>
+          </div>
+        </div>
+        <div id="productGrid" class="product-grid"></div>
+      </section>
+
+      <section class="dashboard-grid">
+        <div class="panel" id="keranjang">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Keranjang</p>
+              <h3>Belanja Anda</h3>
+            </div>
+          </div>
+          <div id="cartItems" class="cart-list"></div>
+          <div class="cart-summary">
+            <div class="summary-row">
+              <span>Total</span>
+              <strong id="cartTotal">Rp 0</strong>
+            </div>
+            <button id="checkoutBtn" class="btn primary full">Checkout</button>
+          </div>
+        </div>
+
+        <div class="panel" id="transaksi">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Transaksi</p>
+              <h3>Ringkasan Keuangan</h3>
+            </div>
+          </div>
+          <div class="summary-cards" id="summaryCards"></div>
+
+          <form id="cashFlowForm" class="stack-form">
+            <select name="flowType">
+              <option value="pemasukan">Uang Masuk</option>
+              <option value="pengeluaran">Uang Keluar</option>
+            </select>
+            <input name="title" placeholder="Keterangan" required />
+            <input name="amount" type="number" min="1" placeholder="Nominal" required />
+            <button class="btn secondary" type="submit">Catat</button>
+          </form>
+
+          <div class="transaction-list">
+            <h4>Riwayat Keuangan</h4>
+            <ul id="cashFlowList"></ul>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
