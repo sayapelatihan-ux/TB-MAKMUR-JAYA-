@@ -95,7 +95,18 @@
               <span>Total</span>
               <strong id="cartTotal">Rp 0</strong>
             </div>
-            <button id="checkoutBtn" class="btn primary full">Checkout</button>
+            <form id="checkoutForm" class="checkout-form">
+              <input name="customerName" placeholder="Nama penerima" required />
+              <input name="phone" placeholder="Nomor HP" required />
+              <textarea name="address" placeholder="Alamat lengkap" rows="3" required></textarea>
+              <select name="paymentMethod">
+                <option value="Transfer Bank">Transfer Bank</option>
+                <option value="QRIS">QRIS</option>
+                <option value="COD">COD</option>
+              </select>
+              <input name="note" placeholder="Catatan (opsional)" />
+              <button id="checkoutBtn" class="btn primary full" type="submit">Checkout</button>
+            </form>
           </div>
         </div>
 

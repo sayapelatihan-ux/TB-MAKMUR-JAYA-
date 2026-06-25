@@ -183,7 +183,8 @@ h1 {
 }
 
 .inline-form,
-.stack-form {
+.stack-form,
+.checkout-form {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
@@ -192,6 +193,9 @@ h1 {
 .inline-form input,
 .stack-form input,
 .stack-form select,
+.checkout-form input,
+.checkout-form select,
+.checkout-form textarea,
 .filters input,
 .filters select {
   border: 1px solid var(--border);
@@ -207,6 +211,23 @@ h1 {
   padding: 8px 12px;
   color: var(--primary);
   font-weight: 600;
+}
+
+.checkout-form {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.checkout-form input,
+.checkout-form select,
+.checkout-form textarea {
+  width: 100%;
+  border-radius: 14px;
+  min-width: 0;
+}
+
+.checkout-form textarea {
+  resize: vertical;
 }
 
 .section-heading {

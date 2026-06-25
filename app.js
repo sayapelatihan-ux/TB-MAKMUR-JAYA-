@@ -166,6 +166,29 @@ export function authenticateUser(username, password) {
   return { success: true, role: account.role, message: "Login berhasil." };
 }
 
+export function createOrderTransaction({ user, formData, cart, createdAt = new Date().toISOString() }) {
+  const customerName = formData.customerName?.toString().trim() || "";
+  const phone = formData.phone?.toString().trim() || "";
+  const address = formData.address?.toString().trim() || "";
+  const paymentMethod = formData.paymentMethod?.toString() || "Transfer Bank";
+  const note = formData.note?.toString().trim() || "";
+  const total = calculateCartTotal(cart);
+
+  return {
+    id: crypto.randomUUID(),
+    customer: user,
+    customerName,
+    phone,
+    address,
+    paymentMethod,
+    note,
+    items: cart.map((item) => ({ name: item.name, qty: item.qty })),
+    total,
+    status: "Diproses",
+    createdAt
+  };
+}
+
 function getProductById(id) {
   return products.find((product) => product.id === id);
 }
@@ -356,7 +379,11 @@ function removeFromCart(productId) {
   renderCart();
 }
 
-function checkout() {
+function checkout(event) {
+  if (event) {
+    event.preventDefault();
+  }
+
   if (!state.user) {
     window.alert("Login dulu sebelum checkout.");
     return;
@@ -366,14 +393,25 @@ function checkout() {
     return;
   }
 
-  const total = calculateCartTotal(state.cart);
-  const sale = {
-    id: crypto.randomUUID(),
-    customer: state.user,
-    items: state.cart.map((item) => ({ name: item.name, qty: item.qty })),
-    total,
+  const form = document.getElementById("checkoutForm");
+  const formData = new FormData(form);
+  const customerName = formData.get("customerName").toString().trim();
+  const phone = formData.get("phone").toString().trim();
+  const address = formData.get("address").toString().trim();
+  const paymentMethod = formData.get("paymentMethod").toString();
+  const note = formData.get("note").toString().trim();
+
+  if (!customerName || !phone || !address) {
+    window.alert("Lengkapi nama penerima, nomor HP, dan alamat sebelum checkout.");
+    return;
+  }
+
+  const sale = createOrderTransaction({
+    user: state.user,
+    formData: { customerName, phone, address, paymentMethod, note },
+    cart: state.cart,
     createdAt: new Date().toISOString()
-  };
+  });
 
   state.transactions.unshift(sale);
   state.cashFlow.unshift({
@@ -386,7 +424,8 @@ function checkout() {
   state.cart = [];
   saveState();
   render();
-  window.alert("Checkout sukses. Transaksi barang dan uang masuk telah tercatat.");
+  form?.reset();
+  window.alert(`Checkout sukses. Pembayaran via ${paymentMethod} dan alamat pengiriman telah tercatat.`);
 }
 
 function handleLogin(event) {
@@ -441,7 +480,7 @@ function handleCashFlow(event) {
 function attachEvents() {
   document.getElementById("loginForm")?.addEventListener("submit", handleLogin);
   document.getElementById("cashFlowForm")?.addEventListener("submit", handleCashFlow);
-  document.getElementById("checkoutBtn")?.addEventListener("click", checkout);
+  document.getElementById("checkoutForm")?.addEventListener("submit", checkout);
   document.getElementById("searchInput")?.addEventListener("input", (event) => {
     state.search = event.target.value;
     renderProducts();
