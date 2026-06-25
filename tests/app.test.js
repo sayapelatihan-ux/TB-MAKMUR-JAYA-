@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { calculateCartTotal, formatCurrency, summarizeTransactions } from "../app.js";
+import { authenticateUser, calculateCartTotal, formatCurrency, summarizeTransactions } from "../app.js";
 
 test("formatCurrency menampilkan format rupiah", () => {
   assert.equal(formatCurrency(150000), "Rp 150.000");
@@ -26,4 +26,10 @@ test("summarizeTransactions menghitung ringkasan keuangan", () => {
   assert.equal(summary.income, 500000);
   assert.equal(summary.expense, 150000);
   assert.equal(summary.balance, 350000);
+});
+
+test("authenticateUser menerima kredensial user dan admin", () => {
+  assert.deepEqual(authenticateUser("user", "user123"), { success: true, role: "user", message: "Login berhasil." });
+  assert.deepEqual(authenticateUser("admin", "admin123"), { success: true, role: "admin", message: "Login berhasil." });
+  assert.deepEqual(authenticateUser("user", "salah"), { success: false, role: null, message: "Username atau password salah." });
 });

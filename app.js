@@ -59,8 +59,14 @@ const initialProducts = [
   }
 ];
 
+const credentials = {
+  user: { username: "user", password: "user123", role: "user" },
+  admin: { username: "admin", password: "admin123", role: "admin" }
+};
+
 const initialState = {
   user: null,
+  role: null,
   cart: [],
   transactions: [],
   cashFlow: [
@@ -146,6 +152,18 @@ export function summarizeTransactions(transactions, cashFlow) {
     expense,
     balance: income - expense
   };
+}
+
+export function authenticateUser(username, password) {
+  const normalizedUsername = username.trim().toLowerCase();
+  const normalizedPassword = password.trim();
+  const account = credentials[normalizedUsername];
+
+  if (!account || account.password !== normalizedPassword) {
+    return { success: false, role: null, message: "Username atau password salah." };
+  }
+
+  return { success: true, role: account.role, message: "Login berhasil." };
 }
 
 function getProductById(id) {
@@ -289,7 +307,9 @@ function renderCashFlow() {
 function renderLogin() {
   const loginStatus = document.getElementById("loginStatus");
   if (!loginStatus) return;
-  loginStatus.textContent = state.user ? `Login sebagai ${state.user}` : "Belum login";
+  loginStatus.textContent = state.user
+    ? `Login sebagai ${state.user} (${state.role === "admin" ? "Admin" : "User"})`
+    : "Belum login";
 }
 
 function render() {
@@ -372,15 +392,22 @@ function checkout() {
 function handleLogin(event) {
   event.preventDefault();
   const formData = new FormData(event.currentTarget);
-  const username = formData.get("username").toString().trim();
-  const password = formData.get("password").toString().trim();
+  const username = formData.get("username").toString();
+  const password = formData.get("password").toString();
 
   if (!username || !password) {
     window.alert("Isi nama pengguna dan kata sandi.");
     return;
   }
 
+  const authResult = authenticateUser(username, password);
+  if (!authResult.success) {
+    window.alert(authResult.message);
+    return;
+  }
+
   state.user = username;
+  state.role = authResult.role;
   saveState();
   renderLogin();
   event.currentTarget.reset();
